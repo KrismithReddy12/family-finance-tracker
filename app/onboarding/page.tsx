@@ -20,7 +20,7 @@ export default async function OnboardingPage({
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface-page px-4 py-12">
       <Card className="animate-fade-in w-full max-w-md p-8">
-        <h1 className="text-xl font-semibold text-ink">Create your family account</h1>
+        <h1 className="font-display text-2xl font-semibold text-ink">Create your family account 🎉</h1>
         <p className="mt-1 text-sm text-ink-secondary">
           One login for the whole family. Everyone gets their own profile once you&apos;re in.
         </p>

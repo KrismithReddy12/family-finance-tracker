@@ -4,14 +4,15 @@ import Link, { LinkProps } from "next/link";
 type Variant = "primary" | "secondary" | "ghost";
 
 const VARIANT_CLASSES: Record<Variant, string> = {
-  primary: "bg-accent text-accent-ink hover:opacity-90 active:scale-[0.98]",
+  primary:
+    "bg-accent text-accent-ink border-b-[5px] border-accent-strong hover:brightness-105 active:translate-y-[3px] active:border-b-[2px]",
   secondary:
-    "bg-surface border border-hairline-strong text-ink hover:bg-surface-page active:scale-[0.98]",
-  ghost: "text-ink-secondary hover:text-ink hover:bg-surface-page active:scale-[0.98]",
+    "bg-surface text-ink border-2 border-b-[5px] border-hairline-strong hover:bg-surface-page hover:border-accent active:translate-y-[3px] active:border-b-2",
+  ghost: "text-ink-secondary hover:text-ink hover:bg-surface-page",
 };
 
 const BASE_CLASSES =
-  "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2";
+  "font-display inline-flex items-center justify-center rounded-2xl px-5 py-2.5 text-sm font-semibold transition-all duration-150 ease-out disabled:pointer-events-none disabled:opacity-50 disabled:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2";
 
 export function Button({
   variant = "primary",

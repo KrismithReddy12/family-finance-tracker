@@ -21,16 +21,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-surface-page">
-      <header className="border-b border-hairline bg-surface">
+      <header className="border-b-[3px] border-hairline bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-6">
-            <span className="text-sm font-semibold tracking-tight text-ink">Family Finance</span>
-            <nav className="flex items-center gap-4">
+            <span className="font-display flex items-center gap-1.5 text-base font-semibold tracking-tight text-ink">
+              <span aria-hidden>🐷</span>
+              Family Finance
+            </span>
+            <nav className="flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-ink-secondary transition-colors duration-150 hover:text-accent"
+                  className="rounded-full px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-accent/10 hover:text-accent"
                 >
                   {link.label}
                 </Link>
@@ -50,7 +53,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <form action="/api/auth/leave-profile" method="POST">
               <button
                 type="submit"
-                className="text-sm text-ink-secondary transition-colors duration-150 hover:text-accent"
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-accent/10 hover:text-accent"
               >
                 Switch profile
               </button>
@@ -58,7 +61,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                className="text-sm text-ink-secondary transition-colors duration-150 hover:text-status-critical"
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-status-critical/10 hover:text-status-critical"
               >
                 Log out
               </button>

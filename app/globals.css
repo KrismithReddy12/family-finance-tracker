@@ -3,15 +3,19 @@
 :root {
   color-scheme: light;
 
-  /* chrome & ink (dataviz skill reference palette) */
-  --surface: #fcfcfb;
-  --surface-page: #f9f9f7;
-  --ink: #0b0b0b;
-  --ink-secondary: #52514e;
-  --ink-muted: #898781;
-  --hairline: #e1e0d9;
-  --hairline-strong: #c3c2b7;
-  --success-text: #006300;
+  /* app chrome: gummy 3D + warm cream (independent of the data palette below) */
+  --surface: #ffffff;
+  --surface-page: #fff8ee;
+  --ink: #3d2530;
+  --ink-secondary: #8a6d76;
+  --ink-muted: #b39ca4;
+  --hairline: #ffe3ea;
+  --hairline-strong: #ffd7de;
+  --success-text: #059669;
+
+  --accent: #ff4d6d;
+  --accent-strong: #c4183f;
+  --accent-ink: #ffffff;
 
   /* status (fixed, never themed) */
   --status-good: #0ca30c;
@@ -19,7 +23,10 @@
   --status-serious: #ec835a;
   --status-critical: #d03b3b;
 
-  /* categorical (fixed order, never cycled) */
+  /* categorical data palette (validated for colorblind-safety - see dataviz
+     skill). Kept exactly as validated: real light pastels fail the CVD/
+     contrast checks, so this stays moderately saturated even though the
+     rest of the app's chrome is light and playful. Fixed order, never cycled. */
   --series-1: #2a78d6; /* blue */
   --series-2: #008300; /* green */
   --series-3: #e87ba4; /* magenta */
@@ -28,10 +35,6 @@
   --series-6: #eb6834; /* orange */
   --series-7: #4a3aa7; /* violet */
   --series-8: #e34948; /* red */
-
-  /* app accent reuses categorical slot 1 (blue) for a cohesive palette */
-  --accent: #2a78d6;
-  --accent-ink: #ffffff;
 }
 
 @theme inline {
@@ -59,23 +62,26 @@
   --color-series-8: var(--series-8);
 
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-accent-ink: var(--accent-ink);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fredoka);
+  --font-sans: var(--font-nunito);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --surface: #1a1a19;
-    --surface-page: #0d0d0d;
-    --ink: #ffffff;
-    --ink-secondary: #c3c2b7;
-    --ink-muted: #898781;
-    --hairline: #2c2c2a;
-    --hairline-strong: #383835;
-    --success-text: #0ca30c;
+    --surface: #2b1f26;
+    --surface-page: #1f151a;
+    --ink: #fbeef2;
+    --ink-secondary: #d8bcc6;
+    --ink-muted: #ab8f9c;
+    --hairline: #4a2e38;
+    --hairline-strong: #5e3b47;
+    --success-text: #34d399;
+    --accent: #ff7a92;
+    --accent-strong: #d94566;
     --series-1: #3987e5;
     --series-2: #008300;
     --series-3: #d55181;
@@ -84,20 +90,21 @@
     --series-6: #d95926;
     --series-7: #9085e9;
     --series-8: #e66767;
-    --accent: #3987e5;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --surface: #1a1a19;
-  --surface-page: #0d0d0d;
-  --ink: #ffffff;
-  --ink-secondary: #c3c2b7;
-  --ink-muted: #898781;
-  --hairline: #2c2c2a;
-  --hairline-strong: #383835;
-  --success-text: #0ca30c;
+  --surface: #2b1f26;
+  --surface-page: #1f151a;
+  --ink: #fbeef2;
+  --ink-secondary: #d8bcc6;
+  --ink-muted: #ab8f9c;
+  --hairline: #4a2e38;
+  --hairline-strong: #5e3b47;
+  --success-text: #34d399;
+  --accent: #ff7a92;
+  --accent-strong: #d94566;
   --series-1: #3987e5;
   --series-2: #008300;
   --series-3: #d55181;
@@ -106,7 +113,6 @@
   --series-6: #d95926;
   --series-7: #9085e9;
   --series-8: #e66767;
-  --accent: #3987e5;
 }
 
 body {
@@ -117,17 +123,24 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
-    animation: fade-in-up 0.35s ease-out both;
+    animation: pop-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .animate-bounce-in {
+    animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 }
 
-@keyframes fade-in-up {
+@keyframes pop-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: scale(0.92) translateY(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02) translateY(-1px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 }

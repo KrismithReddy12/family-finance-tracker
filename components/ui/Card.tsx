@@ -6,7 +6,9 @@ export function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`rounded-2xl border border-hairline bg-surface shadow-sm ${className}`}>
+    <div
+      className={`rounded-3xl border-[3px] border-hairline-strong bg-surface shadow-[5px_5px_0_var(--hairline-strong)] ${className}`}
+    >
       {children}
     </div>
   );

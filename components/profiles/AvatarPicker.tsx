@@ -10,7 +10,7 @@ export function AvatarPicker() {
           {AVATAR_EMOJIS.map((emoji, i) => (
             <label
               key={emoji}
-              className="cursor-pointer rounded-full p-1 transition-all has-checked:ring-2 has-checked:ring-accent has-checked:ring-offset-2 has-checked:ring-offset-surface"
+              className="cursor-pointer rounded-full p-1 transition-transform duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 has-checked:ring-2 has-checked:ring-accent has-checked:ring-offset-2 has-checked:ring-offset-surface"
             >
               <input
                 type="radio"
@@ -32,7 +32,7 @@ export function AvatarPicker() {
           {AVATAR_COLORS.map((color, i) => (
             <label
               key={color}
-              className="cursor-pointer rounded-full p-1 transition-all has-checked:ring-2 has-checked:ring-accent has-checked:ring-offset-2 has-checked:ring-offset-surface"
+              className="cursor-pointer rounded-full p-1 transition-transform duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 has-checked:ring-2 has-checked:ring-accent has-checked:ring-offset-2 has-checked:ring-offset-surface"
             >
               <input
                 type="radio"

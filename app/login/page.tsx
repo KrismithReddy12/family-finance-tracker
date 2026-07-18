@@ -18,7 +18,7 @@ export default async function LoginPage({
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface-page px-4 py-12">
       <Card className="animate-fade-in w-full max-w-md p-8">
-        <h1 className="text-xl font-semibold text-ink">Welcome back</h1>
+        <h1 className="font-display text-2xl font-semibold text-ink">Welcome back 👋</h1>
         <p className="mt-1 text-sm text-ink-secondary">Log in with your family account.</p>
 
         <form action="/api/auth/login" method="POST" className="mt-6 space-y-5">

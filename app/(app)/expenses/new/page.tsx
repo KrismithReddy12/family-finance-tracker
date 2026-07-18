@@ -25,7 +25,7 @@ export default async function NewExpensePage({
   return (
     <div className="animate-fade-in mx-auto max-w-lg space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-ink">Add expense</h1>
+        <h1 className="font-display text-xl font-semibold text-ink">Add expense 🧾</h1>
         <p className="text-sm text-ink-secondary">Log a new purchase for the family.</p>
       </div>
       <Card className="p-6">
