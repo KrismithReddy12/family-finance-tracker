@@ -1,6 +1,12 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth-session";
+
+const NAV_LINKS = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/expenses", label: "Expenses" },
+];
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -17,7 +23,20 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-surface-page">
       <header className="border-b border-hairline bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="text-sm font-semibold tracking-tight text-ink">Family Finance</span>
+          <div className="flex items-center gap-6">
+            <span className="text-sm font-semibold tracking-tight text-ink">Family Finance</span>
+            <nav className="flex items-center gap-4">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-ink-secondary transition-colors duration-150 hover:text-accent"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <span

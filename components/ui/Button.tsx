@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
+import Link, { LinkProps } from "next/link";
 
 type Variant = "primary" | "secondary" | "ghost";
 
@@ -9,15 +10,28 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   ghost: "text-ink-secondary hover:text-ink hover:bg-surface-page active:scale-[0.98]",
 };
 
+const BASE_CLASSES =
+  "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2";
+
 export function Button({
   variant = "primary",
   className = "",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
-    <button
-      className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${VARIANT_CLASSES[variant]} ${className}`}
-      {...props}
-    />
+    <button className={`${BASE_CLASSES} ${VARIANT_CLASSES[variant]} ${className}`} {...props} />
+  );
+}
+
+export function LinkButton({
+  variant = "primary",
+  className = "",
+  children,
+  ...props
+}: LinkProps & { variant?: Variant; className?: string; children: React.ReactNode }) {
+  return (
+    <Link className={`${BASE_CLASSES} ${VARIANT_CLASSES[variant]} ${className}`} {...props}>
+      {children}
+    </Link>
   );
 }
