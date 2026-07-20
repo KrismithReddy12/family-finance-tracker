@@ -2,6 +2,7 @@ import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/format";
+import { budgetStatusColor } from "@/lib/budgetStatus";
 
 type BudgetRowData = {
   category: { id: string; name: string; icon: string; color: string };
@@ -10,12 +11,6 @@ type BudgetRowData = {
   periodStart: string;
   amountOverride?: string;
 };
-
-function statusColor(pct: number): string {
-  if (pct >= 100) return "var(--status-critical)";
-  if (pct >= 90) return "var(--status-warning)";
-  return "var(--status-good)";
-}
 
 export function BudgetRow({ category, spent, budget, periodStart, amountOverride }: BudgetRowData) {
   const pct = budget ? (Number(spent) / Number(budget.amount)) * 100 : null;
@@ -70,10 +65,10 @@ export function BudgetRow({ category, spent, budget, periodStart, amountOverride
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-surface-page">
             <div
               className="h-full rounded-full transition-[width] duration-300"
-              style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: statusColor(pct) }}
+              style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: budgetStatusColor(pct) }}
             />
           </div>
-          <p className="text-xs font-medium" style={{ color: statusColor(pct) }}>
+          <p className="text-xs font-medium" style={{ color: budgetStatusColor(pct) }}>
             {pct.toFixed(0)}% of budget{pct >= 100 ? " · over budget" : ""}
           </p>
         </div>
