@@ -8,12 +8,16 @@ const ERROR_MESSAGES: Record<string, string> = {
   INVALID: "That email or password isn't right. Try again.",
 };
 
+const SUCCESS_MESSAGES: Record<string, string> = {
+  PASSWORD_CHANGED: "Password changed. Log in with your new password.",
+};
+
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; message?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, message } = await searchParams;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface-page px-4 py-12">
@@ -22,6 +26,11 @@ export default async function LoginPage({
         <p className="mt-1 text-sm text-ink-secondary">Log in with your family account.</p>
 
         <form action="/api/auth/login" method="POST" className="mt-6 space-y-5">
+          {message && (
+            <div className="rounded-2xl border border-status-good/20 bg-status-good/10 px-4 py-3 text-sm font-medium text-status-good">
+              {SUCCESS_MESSAGES[message] ?? "Done."}
+            </div>
+          )}
           <FormError>{error ? ERROR_MESSAGES[error] ?? "Something went wrong." : null}</FormError>
 
           <div>

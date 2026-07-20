@@ -53,6 +53,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               </span>
               <span className="text-sm font-medium text-ink">{profile.name}</span>
             </div>
+            <Link
+              href="/settings"
+              aria-label="Settings"
+              className="rounded-full px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-accent/10 hover:text-accent"
+            >
+              ⚙️
+            </Link>
             <form action="/api/auth/leave-profile" method="POST">
               <button
                 type="submit"
