@@ -1,0 +1,1 @@
+- [UI design direction](ui_design_direction.md) - Gummy 3D cartoon style, coral-rose accent, cream bg, Fredoka+Nunito fonts; concrete tokens included. Applies to all UI work.

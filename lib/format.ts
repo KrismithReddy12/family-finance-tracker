@@ -14,3 +14,20 @@ export function toDateInputValue(date: Date): string {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+/** yyyy-mm for <input type="month"> values, in local time (not UTC). */
+export function toMonthInputValue(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+/** Parses a "yyyy-mm" string into the first-of-month Date, in local time. */
+export function fromMonthInputValue(value: string): Date {
+  const [year, month] = value.split("-").map(Number);
+  return new Date(year, month - 1, 1);
+}
+
+export function formatMonthLabel(date: Date): string {
+  return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long" }).format(date);
+}

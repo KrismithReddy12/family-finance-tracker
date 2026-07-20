@@ -12,7 +12,7 @@ export const PAYMENT_METHOD_LABELS: Record<(typeof PAYMENT_METHODS)[number], str
 
 // Kept as a string throughout validation (never coerced to a JS number) so
 // money is never routed through floating point before it reaches Postgres.
-const decimalAmount = z
+export const decimalAmount = z
   .string()
   .trim()
   .regex(/^\d{1,9}(\.\d{1,2})?$/, "Enter a valid amount, e.g. 12.50")
