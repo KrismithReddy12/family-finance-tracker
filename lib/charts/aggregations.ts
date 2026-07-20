@@ -4,9 +4,9 @@
  * testable and never need to know about Prisma or sessions.
  */
 
-type MoneyLike = string | number | { toString(): string };
+export type MoneyLike = string | number | { toString(): string };
 
-function toNumber(value: MoneyLike): number {
+export function toNumber(value: MoneyLike): number {
   return Number(typeof value === "string" || typeof value === "number" ? value : value.toString());
 }
 
