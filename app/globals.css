@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* app chrome: gummy 3D + warm cream (independent of the data palette below) */
-  --surface: #ffffff;
-  --surface-page: #fff8ee;
-  --ink: #3d2530;
-  --ink-secondary: #8a6d76;
-  --ink-muted: #b39ca4;
-  --hairline: #ffe3ea;
-  --hairline-strong: #ffd7de;
-  --success-text: #059669;
+  /* app chrome: gummy 3D + "Royal Velvet" dark purple - single theme,
+     deliberately not OS-preference-driven (see ui-design-direction memory) */
+  --surface: #211730;
+  --surface-page: #160f22;
+  --ink: #f2ecfa;
+  --ink-secondary: #b3a0c4;
+  --ink-muted: #8a7a9c;
+  --hairline: #2c2138;
+  --hairline-strong: #c4b5fd;
+  --shadow-ink: #05030a;
+  --success-text: #34d399;
 
-  --accent: #ff4d6d;
-  --accent-strong: #c4183f;
+  --accent: #8b5cf6;
+  --accent-strong: #6d28d9;
   --accent-ink: #ffffff;
 
   /* status (fixed, never themed) */
@@ -24,17 +26,17 @@
   --status-critical: #d03b3b;
 
   /* categorical data palette (validated for colorblind-safety - see dataviz
-     skill). Kept exactly as validated: real light pastels fail the CVD/
-     contrast checks, so this stays moderately saturated even though the
-     rest of the app's chrome is light and playful. Fixed order, never cycled. */
-  --series-1: #2a78d6; /* blue */
+     skill). These are the app's former dark-mode values, re-validated with
+     the palette validator against the new #211730 card surface - all checks
+     still pass, so kept as-is. Fixed order, never cycled. */
+  --series-1: #3987e5; /* blue */
   --series-2: #008300; /* green */
-  --series-3: #e87ba4; /* magenta */
-  --series-4: #eda100; /* yellow */
-  --series-5: #1baf7a; /* aqua */
-  --series-6: #eb6834; /* orange */
-  --series-7: #4a3aa7; /* violet */
-  --series-8: #e34948; /* red */
+  --series-3: #d55181; /* magenta */
+  --series-4: #c98500; /* yellow */
+  --series-5: #199e70; /* aqua */
+  --series-6: #d95926; /* orange */
+  --series-7: #9085e9; /* violet */
+  --series-8: #e66767; /* red */
 }
 
 @theme inline {
@@ -45,6 +47,7 @@
   --color-ink-muted: var(--ink-muted);
   --color-hairline: var(--hairline);
   --color-hairline-strong: var(--hairline-strong);
+  --color-shadow-ink: var(--shadow-ink);
   --color-success: var(--success-text);
 
   --color-status-good: var(--status-good);
@@ -67,52 +70,6 @@
 
   --font-display: var(--font-fredoka);
   --font-sans: var(--font-nunito);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --surface: #2b1f26;
-    --surface-page: #1f151a;
-    --ink: #fbeef2;
-    --ink-secondary: #d8bcc6;
-    --ink-muted: #ab8f9c;
-    --hairline: #4a2e38;
-    --hairline-strong: #5e3b47;
-    --success-text: #34d399;
-    --accent: #ff7a92;
-    --accent-strong: #d94566;
-    --series-1: #3987e5;
-    --series-2: #008300;
-    --series-3: #d55181;
-    --series-4: #c98500;
-    --series-5: #199e70;
-    --series-6: #d95926;
-    --series-7: #9085e9;
-    --series-8: #e66767;
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --surface: #2b1f26;
-  --surface-page: #1f151a;
-  --ink: #fbeef2;
-  --ink-secondary: #d8bcc6;
-  --ink-muted: #ab8f9c;
-  --hairline: #4a2e38;
-  --hairline-strong: #5e3b47;
-  --success-text: #34d399;
-  --accent: #ff7a92;
-  --accent-strong: #d94566;
-  --series-1: #3987e5;
-  --series-2: #008300;
-  --series-3: #d55181;
-  --series-4: #c98500;
-  --series-5: #199e70;
-  --series-6: #d95926;
-  --series-7: #9085e9;
-  --series-8: #e66767;
 }
 
 body {

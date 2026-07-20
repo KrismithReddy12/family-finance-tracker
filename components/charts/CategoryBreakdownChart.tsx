@@ -8,7 +8,7 @@ function BreakdownTooltip({ active, payload }: { active?: boolean; payload?: { p
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
   return (
-    <div className="rounded-xl border-2 border-hairline-strong bg-surface px-3 py-2 shadow-[3px_3px_0_var(--hairline-strong)]">
+    <div className="rounded-xl border-2 border-hairline-strong bg-surface px-3 py-2 shadow-[3px_3px_0_var(--shadow-ink)]">
       <div className="flex items-center gap-2 text-xs">
         <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: row.color }} />
         <span className="text-ink-secondary">{row.name}</span>

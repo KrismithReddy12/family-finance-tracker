@@ -1,1 +1,1 @@
-- [UI design direction](ui_design_direction.md) - Gummy 3D cartoon style, coral-rose accent, cream bg, Fredoka+Nunito fonts; concrete tokens included. Applies to all UI work.
+- [UI design direction](ui_design_direction.md) - Gummy 3D style, dark-purple-only "Royal Velvet" theme (#160f22/#8b5cf6), Fredoka+Nunito fonts; concrete tokens included. Applies to all UI work.

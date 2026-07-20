@@ -8,7 +8,7 @@ function TrendTooltip({ active, payload }: { active?: boolean; payload?: { paylo
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
   return (
-    <div className="rounded-xl border-2 border-hairline-strong bg-surface px-3 py-2 shadow-[3px_3px_0_var(--hairline-strong)]">
+    <div className="rounded-xl border-2 border-hairline-strong bg-surface px-3 py-2 shadow-[3px_3px_0_var(--shadow-ink)]">
       <p className="text-xs font-semibold text-ink-secondary">{point.label}</p>
       <p className="font-semibold text-ink" style={{ fontVariantNumeric: "tabular-nums" }}>
         {formatCurrency(point.total)}

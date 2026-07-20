@@ -16,7 +16,7 @@ export function CategoryIcon({
     <span
       className={`flex shrink-0 items-center justify-center rounded-full border-2 ${SIZE_CLASSES[size]}`}
       style={{
-        backgroundColor: `color-mix(in oklab, ${color} 22%, var(--surface))`,
+        backgroundColor: `color-mix(in oklab, ${color} 30%, var(--surface))`,
         borderColor: color,
       }}
     >

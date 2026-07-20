@@ -13,7 +13,7 @@ type ExpenseRowData = {
 
 export function ExpenseRow({ expense }: { expense: ExpenseRowData }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-hairline bg-surface px-4 py-3 shadow-[3px_3px_0_var(--hairline)] transition-transform duration-150 hover:-translate-y-0.5">
+    <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-hairline bg-surface px-4 py-3 shadow-[3px_3px_0_var(--shadow-ink)] transition-transform duration-150 hover:-translate-y-0.5">
       <div className="flex min-w-0 items-center gap-3">
         <CategoryIcon icon={expense.category.icon} color={expense.category.color} />
         <div className="min-w-0">

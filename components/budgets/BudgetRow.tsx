@@ -16,7 +16,7 @@ export function BudgetRow({ category, spent, budget, periodStart, amountOverride
   const pct = budget ? (Number(spent) / Number(budget.amount)) * 100 : null;
 
   return (
-    <div className="space-y-3 rounded-2xl border-2 border-hairline bg-surface px-4 py-3 shadow-[3px_3px_0_var(--hairline)]">
+    <div className="space-y-3 rounded-2xl border-2 border-hairline bg-surface px-4 py-3 shadow-[3px_3px_0_var(--shadow-ink)]">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <CategoryIcon icon={category.icon} color={category.color} />
