@@ -1,5 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fredoka, Nunito } from "next/font/google";
+import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { OfflineBanner } from "@/components/pwa/OfflineBanner";
+import { OfflineFormGuard } from "@/components/pwa/OfflineFormGuard";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -18,6 +21,10 @@ export const metadata: Metadata = {
   description: "Track family expenses together, see where money goes, and find ways to save.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ff4d6d",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +35,12 @@ export default function RootLayout({
       lang="en"
       className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <OfflineBanner />
+        {children}
+        <ServiceWorkerRegistration />
+        <OfflineFormGuard />
+      </body>
     </html>
   );
 }
