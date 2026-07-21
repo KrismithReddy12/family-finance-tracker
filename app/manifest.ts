@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Track family expenses together, see where money goes, and find ways to save.",
     start_url: "/dashboard",
     display: "standalone",
-    background_color: "#160f22",
-    theme_color: "#160f22",
+    background_color: "#1c1330",
+    theme_color: "#1c1330",
     icons: [
       { src: "/icons/192", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icons/512", sizes: "512x512", type: "image/png", purpose: "any" },

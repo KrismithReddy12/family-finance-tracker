@@ -7,13 +7,13 @@
   /* app chrome: gummy 3D + "Royal Velvet" dark purple - single theme,
      deliberately not OS-preference-driven (see ui-design-direction memory) */
   --surface: #211730;
-  --surface-page: #160f22;
+  --surface-page: #1c1330;
   --ink: #f2ecfa;
   --ink-secondary: #b3a0c4;
   --ink-muted: #8a7a9c;
   --hairline: #2c2138;
   --hairline-strong: #c4b5fd;
-  --shadow-ink: #05030a;
+  --shadow-ink: #000000;
   --success-text: #34d399;
 
   --accent: #8b5cf6;
