@@ -18,4 +18,5 @@ export const CATEGORY_COLORS = [
   "var(--series-6)",
   "var(--series-7)",
   "var(--series-8)",
+  "var(--ink-muted)",
 ] as const;
