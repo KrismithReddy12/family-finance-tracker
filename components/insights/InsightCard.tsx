@@ -11,7 +11,7 @@ export function InsightCard({ insight }: { insight: Insight }) {
   const style = SEVERITY_STYLES[insight.severity];
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl bg-surface px-4 py-3">
+    <div className="flex items-start gap-3 rounded-2xl border-2 border-accent/30 bg-surface px-4 py-3">
       <span
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 text-lg"
         style={{ borderColor: style.color, backgroundColor: `color-mix(in oklab, ${style.color} 16%, var(--surface))` }}
