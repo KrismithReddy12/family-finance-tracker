@@ -7,6 +7,13 @@
 // network-only; the offline-form guard (see components/pwa) stops them from
 // even being attempted while offline, so this worker never has to reason
 // about failed writes.
+//
+// Same-origin GETs are network-first, cache-on-failure - NOT
+// stale-while-revalidate. This app is data-CRUD (add/edit/delete an expense,
+// set a budget, ...), so a page you navigate to right after a mutation must
+// show the fresh result immediately, not whatever was cached from the last
+// time you viewed it. The cache exists purely as an offline fallback: it's
+// only ever read when the network fetch actually fails.
 const CACHE_NAME = "family-finance-v1";
 
 const OFFLINE_FALLBACK_HTML = `<!doctype html>
@@ -54,32 +61,24 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     caches.open(CACHE_NAME).then(async (cache) => {
-      const cached = await cache.match(request);
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse.ok) cache.put(request, networkResponse.clone());
+        return networkResponse;
+      } catch {
+        // Actually offline (or the request otherwise failed) - fall back to
+        // whatever was last cached for this exact request.
+        const cached = await cache.match(request);
+        if (cached) return cached;
 
-      const networkFetch = fetch(request)
-        .then((response) => {
-          if (response.ok) cache.put(request, response.clone());
-          return response;
-        })
-        .catch(() => null);
-
-      if (cached) {
-        // Serve the cached copy immediately; refresh the cache in the
-        // background without blocking this response.
-        event.waitUntil(networkFetch);
-        return cached;
+        if (request.mode === "navigate") {
+          return new Response(OFFLINE_FALLBACK_HTML, {
+            status: 503,
+            headers: { "Content-Type": "text/html" },
+          });
+        }
+        return new Response("Offline", { status: 503 });
       }
-
-      const networkResponse = await networkFetch;
-      if (networkResponse) return networkResponse;
-
-      if (request.mode === "navigate") {
-        return new Response(OFFLINE_FALLBACK_HTML, {
-          status: 503,
-          headers: { "Content-Type": "text/html" },
-        });
-      }
-      return new Response("Offline", { status: 503 });
     })
   );
 });
