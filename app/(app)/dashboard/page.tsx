@@ -141,58 +141,11 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <Card className="p-3">
-        <form method="GET" className="flex flex-wrap items-end gap-2">
-          <div className="flex-1">
-            <Label htmlFor="month">Jump to month</Label>
-            <Input type="month" id="month" name="month" defaultValue={month} className="py-2 text-sm" />
-          </div>
-          <div className="flex-1">
-            <Label htmlFor="profileId">Profile</Label>
-            <Select id="profileId" name="profileId" defaultValue={profileId ?? ""} className="py-2 text-sm">
-              <option value="">Everyone</option>
-              {profiles.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <Button type="submit" variant="secondary" className="px-3 py-2 text-xs">
-            Go
-          </Button>
-          {hasFilters && (
-            <Link
-              href="/dashboard"
-              className="px-1 py-2 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:text-accent"
-            >
-              Clear
-            </Link>
-          )}
-        </form>
-      </Card>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Card className="p-5">
-          <h2 className="font-display text-sm font-semibold text-ink">Where it went</h2>
-          <p className="mb-4 text-xs text-ink-secondary">By category, {monthLabel}.</p>
-          {breakdown.length === 0 ? (
-            <p className="py-8 text-center text-sm text-ink-secondary">No expenses logged for this month yet.</p>
-          ) : (
-            <CategoryBreakdownChart data={breakdown} />
-          )}
-        </Card>
-
-        <Card className="p-5">
-          <h2 className="font-display text-sm font-semibold text-ink">Spending trend</h2>
-          <p className="mb-4 text-xs text-ink-secondary">Trailing {TREND_MONTHS} months.</p>
-          {trendExpenses.length === 0 ? (
-            <p className="py-8 text-center text-sm text-ink-secondary">No expenses in this window yet.</p>
-          ) : (
-            <MonthlyTrendChart data={trend} />
-          )}
-        </Card>
-      </div>
+      {trendExpenses.length === 0 ? (
+        <p className="py-6 text-center text-sm text-ink-secondary">No expenses in this window yet.</p>
+      ) : (
+        <MonthlyTrendChart data={trend} />
+      )}
 
       {budgetRows.length > 0 && (
         <div className="space-y-3">
@@ -232,6 +185,51 @@ export default async function DashboardPage({
             ))}
           </Group>
         )}
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="font-display px-1 text-sm font-semibold text-ink">A deeper look</h2>
+
+        <Card className="p-3">
+          <form method="GET" className="flex flex-wrap items-end gap-2">
+            <div className="flex-1">
+              <Label htmlFor="month">Jump to month</Label>
+              <Input type="month" id="month" name="month" defaultValue={month} className="py-2 text-sm" />
+            </div>
+            <div className="flex-1">
+              <Label htmlFor="profileId">Profile</Label>
+              <Select id="profileId" name="profileId" defaultValue={profileId ?? ""} className="py-2 text-sm">
+                <option value="">Everyone</option>
+                {profiles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <Button type="submit" variant="secondary" className="px-3 py-2 text-xs">
+              Go
+            </Button>
+            {hasFilters && (
+              <Link
+                href="/dashboard"
+                className="px-1 py-2 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:text-accent"
+              >
+                Clear
+              </Link>
+            )}
+          </form>
+        </Card>
+
+        <Card className="p-5">
+          <h3 className="font-display text-sm font-semibold text-ink">Where it went</h3>
+          <p className="mb-4 text-xs text-ink-secondary">By category, {monthLabel}.</p>
+          {breakdown.length === 0 ? (
+            <p className="py-8 text-center text-sm text-ink-secondary">No expenses logged for this month yet.</p>
+          ) : (
+            <CategoryBreakdownChart data={breakdown} />
+          )}
+        </Card>
       </div>
     </div>
   );
