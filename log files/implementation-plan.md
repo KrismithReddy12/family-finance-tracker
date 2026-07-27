@@ -1,8 +1,8 @@
 # Family Expense Tracker - Implementation Plan
 
-## Progress So Far (updated 2026-07-20, end of session)
+## Progress So Far (updated 2026-07-27, end of session)
 
-**Done: Phases 0, 1, 2, 3, 4, 5, 7, plus a full UI design pass and a second design pass. Phase 6 (PWA polish) is code-complete but deliberately paused before deploy/device verification - see below. All local app work is now complete; only Phase 6's deploy/device step remains.**
+**All 7 original phases complete and live in production (see Phase 6 status below). Since then: a bug-fix pass (2026-07-21, first live browser check) and a third UI redesign pass (2026-07-27) that replaced the "Gummy 3D" shape language with a flat "Robinhood-style" mobile shell - bottom tab navigation, flat grouped lists, a hero dashboard stat - on the same Royal Velvet palette. Full narrative in `log files/2026-07-27-robinhood-redesign.md`; current design rules live in the `ui-design-direction` memory (re-synced to `log files/ui_design_direction.md`).**
 
 **Second design pass (post-Phase-7):** with the app feature-complete, the user decided they didn't like the original cream + coral-rose look after all and pointed at a different project (`caffeine-countdown`) as a reference. Three rounds of comparison-mockup artifacts (never guessed blind on the live app) converged on a full palette swap: the app is now a single dark-purple theme, "Royal Velvet" (`#160f22` page / `#211730` card / `#8b5cf6` accent), not a light/dark pair - the user explicitly chose dark-purple-only over building a matching light companion. Full rationale, exact tokens, and the reasoning behind splitting the border color from the shadow color (a dark-on-dark shadow doesn't read as depth the way the old light-mode one did) are in the `ui-design-direction` memory - this file's copy in `log files/` was re-synced from it, so that's the source of truth going forward, not the summary here.
 
@@ -64,7 +64,7 @@ Full narrative in `log files/2026-07-21-vercel-neon-deploy.md`.
 
 **Phase 7 verification:** every settings flow driven end-to-end with `curl` against real data, including the sequences that only show up under real use rather than a first pass - changed the shared password, confirmed the old password now fails and the new one works, confirmed the session was force-cleared in between; added a throwaway zero-expense profile specifically so the "successful delete" path had something to test (the two seeded test families only had profiles with real expense history by this point); confirmed both delete-blocking rules (has expenses, is the last profile) and cross-family isolation on the new `/api/settings/*` routes; confirmed the segment-scoped 404 keeps the app-shell nav while the root 404 doesn't. A production build (`next build`) was re-run after these changes and stayed clean.
 
-**Immediate next step:** none - all 7 phases are complete and the app is live in production, installed and verified on a real iPhone. The only open item is rotating the Neon database password (see Phase 6 status above), deferred by the user to a future session.
+**Immediate next step:** verify the 2026-07-27 Robinhood-style redesign on a real iPhone (Add to Home Screen) - specifically that the input font-size fix actually stops the auto-zoom-on-focus bug the user reported, since that's real-Safari-only behavior no desktop tool can reproduce (see `log files/2026-07-27-robinhood-redesign.md`). Also still open: rotating the Neon database password (see Phase 6 status above), deferred by the user to a future session.
 
 ## Context
 

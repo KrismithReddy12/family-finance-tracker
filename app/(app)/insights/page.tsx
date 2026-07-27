@@ -49,17 +49,17 @@ export default async function InsightsPage({
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="font-display text-xl font-semibold text-ink">Insights 💡</h1>
+        <h1 className="font-display text-xl font-bold text-ink">Insights</h1>
         <p className="text-sm text-ink-secondary">Where your money&apos;s going, and what&apos;s worth a second look.</p>
       </div>
 
-      <Card className="flex items-center gap-2 p-4">
-        <LinkButton href={`/insights?month=${prevMonth}`} variant="secondary" className="px-3 py-2.5 text-sm">
-          ←
+      <Card className="flex items-center gap-2 p-3">
+        <LinkButton href={`/insights?month=${prevMonth}`} variant="ghost" className="px-2.5 py-1.5 text-base">
+          ‹
         </LinkButton>
-        <span className="font-display flex-1 text-center text-sm font-semibold text-ink">{monthLabel}</span>
-        <LinkButton href={`/insights?month=${nextMonth}`} variant="secondary" className="px-3 py-2.5 text-sm">
-          →
+        <span className="font-display flex-1 text-center text-sm font-bold text-ink">{monthLabel}</span>
+        <LinkButton href={`/insights?month=${nextMonth}`} variant="ghost" className="px-2.5 py-1.5 text-base">
+          ›
         </LinkButton>
       </Card>
 

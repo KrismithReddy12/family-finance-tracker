@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth-session";
 import { Card } from "@/components/ui/Card";
+import { Group } from "@/components/ui/Group";
 import { LinkButton } from "@/components/ui/Button";
 import { FormError } from "@/components/ui/FormError";
 import { BudgetRow } from "@/components/budgets/BudgetRow";
@@ -61,23 +62,20 @@ export default async function BudgetsPage({
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div>
-        <h1 className="font-display text-xl font-semibold text-ink">Budgets 🎯</h1>
-        <p className="text-sm text-ink-secondary">Set a monthly target per category and track progress.</p>
-      </div>
+      <h1 className="font-display text-xl font-bold text-ink">Budgets</h1>
 
       <FormError>{query.error ? (ERROR_MESSAGES[query.error] ?? "Something went wrong.") : null}</FormError>
 
       <Card className="flex flex-wrap items-center justify-between gap-4 p-4">
         <div className="flex items-center gap-2">
-          <LinkButton href={`/budgets?month=${prevMonth}`} variant="secondary" className="px-3 py-2 text-sm">
-            ←
+          <LinkButton href={`/budgets?month=${prevMonth}`} variant="ghost" className="px-2.5 py-1.5 text-base">
+            ‹
           </LinkButton>
-          <span className="font-display min-w-36 text-center text-sm font-semibold text-ink">
+          <span className="font-display min-w-32 text-center text-sm font-bold text-ink">
             {formatMonthLabel(periodStart)}
           </span>
-          <LinkButton href={`/budgets?month=${nextMonth}`} variant="secondary" className="px-3 py-2 text-sm">
-            →
+          <LinkButton href={`/budgets?month=${nextMonth}`} variant="ghost" className="px-2.5 py-1.5 text-base">
+            ›
           </LinkButton>
         </div>
         <div className="text-right">
@@ -100,7 +98,7 @@ export default async function BudgetsPage({
           </LinkButton>
         </Card>
       ) : (
-        <div className="space-y-3">
+        <Group>
           {rows.map((row) => (
             <BudgetRow
               key={row.category.id}
@@ -111,7 +109,7 @@ export default async function BudgetsPage({
               amountOverride={row.amountOverride}
             />
           ))}
-        </div>
+        </Group>
       )}
     </div>
   );

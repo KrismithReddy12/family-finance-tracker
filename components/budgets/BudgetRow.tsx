@@ -16,13 +16,13 @@ export function BudgetRow({ category, spent, budget, periodStart, amountOverride
   const pct = budget ? (Number(spent) / Number(budget.amount)) * 100 : null;
 
   return (
-    <div className="space-y-3 rounded-2xl border-2 border-hairline bg-surface px-4 py-3 shadow-[3px_3px_0_var(--shadow-ink)]">
+    <div className="space-y-3 border-b border-hairline px-4 py-3 last:border-b-0">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <CategoryIcon icon={category.icon} color={category.color} />
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-ink">{category.name}</p>
-            <p className="text-xs text-ink-secondary" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <p className="text-xs text-ink-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
               {formatCurrency(spent)} spent{budget ? ` of ${formatCurrency(budget.amount)}` : ""}
             </p>
           </div>
@@ -38,11 +38,11 @@ export function BudgetRow({ category, spent, budget, periodStart, amountOverride
               pattern="^\d{1,9}(\.\d{1,2})?$"
               placeholder="0.00"
               defaultValue={amountOverride ?? budget?.amount}
-              className="w-28"
+              className="w-24 py-1.5 text-sm"
               aria-label={`Budget for ${category.name}`}
               required
             />
-            <Button type="submit" variant="secondary" className="px-3 py-2 text-xs">
+            <Button type="submit" variant="secondary" className="px-3 py-1.5 text-xs">
               Save
             </Button>
           </form>
@@ -51,7 +51,7 @@ export function BudgetRow({ category, spent, budget, periodStart, amountOverride
               <Button
                 type="submit"
                 variant="ghost"
-                className="px-2 py-2 text-xs text-ink-muted hover:text-status-critical"
+                className="px-2 py-1.5 text-xs text-ink-muted hover:text-status-critical"
               >
                 Clear
               </Button>

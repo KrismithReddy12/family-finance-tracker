@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth-session";
 import { Card } from "@/components/ui/Card";
+import { Group } from "@/components/ui/Group";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Input, Label, Select } from "@/components/ui/Input";
 import { ExpenseRow } from "@/components/expenses/ExpenseRow";
-import { StatTile } from "@/components/dashboard/StatTile";
 import { BudgetMeterRow } from "@/components/dashboard/BudgetMeterRow";
 import { CategoryBreakdownChart } from "@/components/charts/CategoryBreakdownChart";
 import { MonthlyTrendChart } from "@/components/charts/MonthlyTrendChart";
@@ -27,7 +27,6 @@ export default async function DashboardPage({
 
   const month = query.month && /^\d{4}-\d{2}$/.test(query.month) ? query.month : toMonthInputValue(new Date());
   const profileId = query.profileId || undefined;
-  const isCurrentMonth = month === toMonthInputValue(new Date());
   const hasFilters = Boolean(query.month || query.profileId);
 
   const periodStart = fromMonthInputValue(month);
@@ -37,8 +36,12 @@ export default async function DashboardPage({
   const trendStart = new Date(periodStart.getFullYear(), periodStart.getMonth() - (TREND_MONTHS - 1), 1);
 
   const profileFilter = profileId ? { profileId } : {};
+  const prevHref = `/dashboard?month=${prevMonth}${profileId ? `&profileId=${profileId}` : ""}`;
+  const nextHref = `/dashboard?month=${nextMonth}${profileId ? `&profileId=${profileId}` : ""}`;
 
-  const [profiles, categories, budgets, monthExpenses, trendExpenses] = await Promise.all([
+  const [family, activeProfile, profiles, categories, budgets, monthExpenses, trendExpenses] = await Promise.all([
+    db.family.findUnique({ where: { id: session.familyId } }),
+    db.profile.findUnique({ where: { id: session.activeProfileId } }),
     db.profile.findMany({ where: { familyId: session.familyId }, orderBy: { createdAt: "asc" } }),
     db.category.findMany({ where: { familyId: session.familyId }, orderBy: { name: "asc" } }),
     db.budget.findMany({ where: { familyId: session.familyId, periodStart } }),
@@ -52,6 +55,7 @@ export default async function DashboardPage({
       select: { categoryId: true, amount: true, date: true },
     }),
   ]);
+  if (!activeProfile) redirect("/profiles");
 
   const trend = monthlyTrend(trendExpenses, TREND_MONTHS, periodStart);
   const monthTotal = trend[trend.length - 1]?.total ?? 0;
@@ -62,47 +66,90 @@ export default async function DashboardPage({
   const breakdown = categoryBreakdown(monthExpenses, categories);
   const budgetRows = budgetVsActual(categories, budgets, monthExpenses);
   const budgetedActual = budgetRows.reduce((sum, row) => sum + row.actual, 0);
+  const budgetRemaining = totalBudgeted - budgetedActual;
   const recentExpenses = monthExpenses.slice(0, 5);
 
   const monthLabel = formatMonthLabel(periodStart);
+  const isDeltaGood = delta === null ? true : delta <= 0;
 
   return (
-    <div className="animate-fade-in space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-display text-xl font-semibold text-ink">Dashboard ✨</h1>
-          <p className="text-sm text-ink-secondary">
-            {isCurrentMonth ? "Your family's spending at a glance." : `Spending for ${monthLabel}.`}
-          </p>
+    <div className="animate-fade-in space-y-7">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span
+            className="flex h-9 w-9 items-center justify-center rounded-full text-lg"
+            style={{ backgroundColor: activeProfile.avatarColor }}
+          >
+            {activeProfile.avatarEmoji}
+          </span>
+          <div>
+            <p className="font-display text-sm font-bold text-ink">Hey, {activeProfile.name}</p>
+            {family && <p className="text-xs text-ink-muted">{family.name}</p>}
+          </div>
         </div>
-        <LinkButton href="/expenses/new">➕ Add expense</LinkButton>
+        <Link
+          href="/settings"
+          aria-label="Settings"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-ink-secondary transition-colors duration-150 hover:bg-surface hover:text-ink"
+        >
+          ⚙️
+        </Link>
       </div>
 
-      <Card className="p-4">
-        <form method="GET" className="flex flex-wrap items-end gap-3">
-          <div className="flex items-center gap-1">
-            <LinkButton
-              href={`/dashboard?month=${prevMonth}${profileId ? `&profileId=${profileId}` : ""}`}
-              variant="secondary"
-              className="px-3 py-2.5 text-sm"
-            >
-              ←
-            </LinkButton>
-            <div className="w-40">
-              <Label htmlFor="month">Month</Label>
-              <Input id="month" name="month" type="month" defaultValue={month} />
-            </div>
-            <LinkButton
-              href={`/dashboard?month=${nextMonth}${profileId ? `&profileId=${profileId}` : ""}`}
-              variant="secondary"
-              className="px-3 py-2.5 text-sm"
-            >
-              →
-            </LinkButton>
+      <div>
+        <div className="flex items-center justify-center gap-3">
+          <LinkButton href={prevHref} variant="ghost" className="px-2.5 py-1.5 text-base">
+            ‹
+          </LinkButton>
+          <span className="font-display text-sm font-bold text-ink-secondary">{monthLabel}</span>
+          <LinkButton href={nextHref} variant="ghost" className="px-2.5 py-1.5 text-base">
+            ›
+          </LinkButton>
+        </div>
+
+        <div className="pt-3 text-center">
+          <p className="text-xs font-bold tracking-wide text-ink-muted uppercase">Spent this month</p>
+          <p
+            className="font-display mt-1 text-[40px] leading-none font-bold text-ink"
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {formatCurrency(monthTotal)}
+          </p>
+          <div className="mt-2.5 flex items-center justify-center gap-2 text-sm">
+            {delta !== null ? (
+              <>
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                    isDeltaGood ? "bg-success/15 text-success" : "bg-status-critical/15 text-status-critical"
+                  }`}
+                >
+                  {delta > 0 ? "▲" : delta < 0 ? "▼" : "–"} {Math.abs(delta).toFixed(1)}%
+                </span>
+                <span className="text-ink-muted">vs last month</span>
+              </>
+            ) : (
+              <span className="text-ink-muted">No spend last month to compare</span>
+            )}
           </div>
-          <div className="w-44">
+          {totalBudgeted > 0 && (
+            <p className="mt-1.5 text-xs font-medium" style={{ color: budgetRemaining < 0 ? "var(--status-critical)" : "var(--ink-muted)" }}>
+              {budgetRemaining < 0
+                ? `${formatCurrency(Math.abs(budgetRemaining))} over your ${formatCurrency(totalBudgeted)} budget`
+                : `${formatCurrency(budgetRemaining)} left of ${formatCurrency(totalBudgeted)} budgeted`}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <Card className="p-3">
+        <form method="GET" className="flex flex-wrap items-end gap-2">
+          <div className="flex-1">
+            <Label htmlFor="month">Jump to month</Label>
+            <Input type="month" id="month" name="month" defaultValue={month} className="py-2 text-sm" />
+          </div>
+          <div className="flex-1">
             <Label htmlFor="profileId">Profile</Label>
-            <Select id="profileId" name="profileId" defaultValue={profileId ?? ""}>
+            <Select id="profileId" name="profileId" defaultValue={profileId ?? ""} className="py-2 text-sm">
               <option value="">Everyone</option>
               {profiles.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -111,13 +158,13 @@ export default async function DashboardPage({
               ))}
             </Select>
           </div>
-          <Button type="submit" variant="secondary">
-            Filter
+          <Button type="submit" variant="secondary" className="px-3 py-2 text-xs">
+            Go
           </Button>
           {hasFilters && (
             <Link
               href="/dashboard"
-              className="px-2 py-2 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:text-accent"
+              className="px-1 py-2 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:text-accent"
             >
               Clear
             </Link>
@@ -125,27 +172,8 @@ export default async function DashboardPage({
         </form>
       </Card>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatTile label={`Spent in ${monthLabel}`} value={formatCurrency(monthTotal)} />
-        <StatTile
-          label="Budget remaining"
-          value={totalBudgeted > 0 ? formatCurrency(totalBudgeted - budgetedActual) : "—"}
-          hint={totalBudgeted > 0 ? `of ${formatCurrency(totalBudgeted)} budgeted` : "No budgets set for this month"}
-        />
-        <StatTile
-          label="Vs last month"
-          value={delta === null ? "—" : `${delta > 0 ? "+" : ""}${delta.toFixed(0)}%`}
-          delta={
-            delta === null
-              ? null
-              : { text: delta === 0 ? "No change" : delta > 0 ? "More than last month" : "Less than last month", isGood: delta <= 0 }
-          }
-          hint={delta === null ? "No spend last month to compare" : undefined}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card className="p-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card className="p-5">
           <h2 className="font-display text-sm font-semibold text-ink">Where it went</h2>
           <p className="mb-4 text-xs text-ink-secondary">By category, {monthLabel}.</p>
           {breakdown.length === 0 ? (
@@ -155,7 +183,7 @@ export default async function DashboardPage({
           )}
         </Card>
 
-        <Card className="p-6">
+        <Card className="p-5">
           <h2 className="font-display text-sm font-semibold text-ink">Spending trend</h2>
           <p className="mb-4 text-xs text-ink-secondary">Trailing {TREND_MONTHS} months.</p>
           {trendExpenses.length === 0 ? (
@@ -167,45 +195,42 @@ export default async function DashboardPage({
       </div>
 
       {budgetRows.length > 0 && (
-        <Card className="p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <h2 className="font-display text-sm font-semibold text-ink">Budgets this month</h2>
-              <p className="text-xs text-ink-secondary">Spend against what you set aside.</p>
-            </div>
-            <Link href="/budgets" className="text-xs font-bold text-accent transition-colors duration-150 hover:underline">
-              View all
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="font-display text-sm font-semibold text-ink">Budgets this month</h2>
+            <Link href="/budgets" className="text-xs font-bold text-accent">
+              See all ›
             </Link>
           </div>
-          <div className="space-y-4">
+          <Group>
             {budgetRows.slice(0, MAX_BUDGET_METERS).map((row) => (
               <BudgetMeterRow key={row.categoryId} row={row} />
             ))}
-          </div>
-        </Card>
+          </Group>
+        </div>
       )}
 
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h2 className="font-display text-sm font-semibold text-ink">Recent expenses</h2>
-          <Link
-            href="/expenses"
-            className="text-xs font-bold text-accent transition-colors duration-150 hover:underline"
-          >
-            View all
+          <h2 className="font-display text-sm font-semibold text-ink">Recent</h2>
+          <Link href="/expenses" className="text-xs font-bold text-accent">
+            See all ›
           </Link>
         </div>
         {recentExpenses.length === 0 ? (
           <Card className="p-10 text-center">
             <p className="text-sm font-semibold text-ink">No expenses logged yet.</p>
             <p className="mt-1 text-sm text-ink-secondary">Add your first one to get started.</p>
+            <LinkButton href="/expenses/new" className="mt-4">
+              ➕ Add expense
+            </LinkButton>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <Group>
             {recentExpenses.map((expense) => (
               <ExpenseRow key={expense.id} expense={expense} />
             ))}
-          </div>
+          </Group>
         )}
       </div>
     </div>

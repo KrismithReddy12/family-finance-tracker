@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth-session";
 import { Card } from "@/components/ui/Card";
+import { Group } from "@/components/ui/Group";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
 import { FormError } from "@/components/ui/FormError";
@@ -34,24 +36,58 @@ export default async function SettingsPage({
   ]);
   if (!family) redirect("/login");
 
+  const activeProfile = profiles.find((p) => p.id === session.activeProfileId);
   const expenseCountByProfile = new Map(expenseCounts.map((row) => [row.profileId, row._count._all]));
   const profileError = query.error === "LAST_PROFILE" || query.error === "PROFILE_HAS_EXPENSES" ? query.error : undefined;
   const passwordError = query.error === "INVALID_PASSWORD" || query.error === "WRONG_PASSWORD" ? query.error : undefined;
 
   return (
-    <div className="animate-fade-in mx-auto max-w-lg space-y-6">
-      <div>
-        <h1 className="font-display text-xl font-semibold text-ink">Settings ⚙️</h1>
-        <p className="text-sm text-ink-secondary">Manage your family account.</p>
-      </div>
+    <div className="animate-fade-in space-y-6">
+      <h1 className="font-display text-xl font-bold text-ink">Settings</h1>
 
       {query.success && (
-        <div className="rounded-2xl border border-status-good/20 bg-status-good/10 px-4 py-3 text-sm font-medium text-status-good">
+        <div className="rounded-2xl bg-status-good/10 px-4 py-3 text-sm font-medium text-status-good">
           {SUCCESS_MESSAGES[query.success] ?? "Done."}
         </div>
       )}
 
-      <Card className="space-y-4 p-6">
+      {activeProfile && (
+        <Group>
+          <div className="flex items-center gap-3 px-4 py-3">
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-full text-xl"
+              style={{ backgroundColor: activeProfile.avatarColor }}
+            >
+              {activeProfile.avatarEmoji}
+            </span>
+            <div>
+              <p className="text-sm font-bold text-ink">{activeProfile.name}</p>
+              <p className="text-xs text-ink-muted">{family.name}</p>
+            </div>
+          </div>
+        </Group>
+      )}
+
+      <Group>
+        <Link
+          href="/categories"
+          className="flex items-center justify-between px-4 py-3 text-sm font-semibold text-ink"
+        >
+          Manage categories
+          <span className="text-ink-muted">›</span>
+        </Link>
+        <form action="/api/auth/leave-profile" method="POST">
+          <button
+            type="submit"
+            className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-ink"
+          >
+            Switch profile
+            <span className="text-ink-muted">›</span>
+          </button>
+        </form>
+      </Group>
+
+      <Card className="space-y-4 p-5">
         <h2 className="font-display text-sm font-semibold text-ink">Family name</h2>
         <form action="/api/settings/family" method="POST" className="space-y-3">
           {query.error === "INVALID_FAMILY_NAME" && <FormError>{ERROR_MESSAGES.INVALID_FAMILY_NAME}</FormError>}
@@ -69,7 +105,7 @@ export default async function SettingsPage({
         </form>
       </Card>
 
-      <Card className="space-y-4 p-6">
+      <Card className="space-y-4 p-5">
         <h2 className="font-display text-sm font-semibold text-ink">Change password</h2>
         <p className="text-xs text-ink-secondary">Shared by everyone in the family. Changing it signs everyone out.</p>
         <form action="/api/settings/password" method="POST" className="space-y-3">
@@ -90,20 +126,17 @@ export default async function SettingsPage({
         </form>
       </Card>
 
-      <Card className="space-y-4 p-6">
-        <h2 className="font-display text-sm font-semibold text-ink">Profiles</h2>
+      <div className="space-y-3">
+        <h2 className="font-display px-1 text-sm font-semibold text-ink">Profiles</h2>
         {profileError && <FormError>{ERROR_MESSAGES[profileError]}</FormError>}
-        <div className="space-y-3">
+        <Group>
           {profiles.map((profile) => {
             const expenseCount = expenseCountByProfile.get(profile.id) ?? 0;
             return (
-              <div
-                key={profile.id}
-                className="flex items-center justify-between gap-3 rounded-2xl border-2 border-hairline px-4 py-3"
-              >
+              <div key={profile.id} className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-3 last:border-b-0">
                 <div className="flex items-center gap-3">
                   <span
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-base text-accent-ink"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-base"
                     style={{ backgroundColor: profile.avatarColor }}
                   >
                     {profile.avatarEmoji}
@@ -127,14 +160,16 @@ export default async function SettingsPage({
               </div>
             );
           })}
-        </div>
-      </Card>
+        </Group>
+      </div>
 
-      <form action="/api/auth/logout" method="POST">
-        <Button type="submit" variant="secondary" className="w-full">
-          Log out
-        </Button>
-      </form>
+      <Group>
+        <form action="/api/auth/logout" method="POST">
+          <button type="submit" className="w-full px-4 py-3 text-left text-sm font-semibold text-status-critical">
+            Log out
+          </button>
+        </form>
+      </Group>
     </div>
   );
 }

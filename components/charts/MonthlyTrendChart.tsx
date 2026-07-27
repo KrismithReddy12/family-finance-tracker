@@ -1,6 +1,6 @@
 "use client";
 
-import { CartesianGrid, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatCurrency } from "@/lib/format";
 import type { MonthlyTrendPoint } from "@/lib/charts/aggregations";
 
@@ -8,7 +8,7 @@ function TrendTooltip({ active, payload }: { active?: boolean; payload?: { paylo
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
   return (
-    <div className="rounded-xl border-2 border-hairline-strong bg-surface px-3 py-2 shadow-[3px_3px_0_var(--shadow-ink)]">
+    <div className="rounded-xl bg-surface px-3 py-2 shadow-lg">
       <p className="text-xs font-semibold text-ink-secondary">{point.label}</p>
       <p className="font-semibold text-ink" style={{ fontVariantNumeric: "tabular-nums" }}>
         {formatCurrency(point.total)}
@@ -38,23 +38,29 @@ export function MonthlyTrendChart({ data }: { data: MonthlyTrendPoint[] }) {
 
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <LineChart data={data} margin={{ top: 20, right: 24, bottom: 4, left: 4 }}>
-        <CartesianGrid vertical={false} stroke="var(--hairline)" />
+      <AreaChart data={data} margin={{ top: 20, right: 24, bottom: 4, left: 8 }}>
+        <defs>
+          <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.35} />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "var(--ink-muted)", fontSize: 12 }} />
         <YAxis hide />
-        <Tooltip cursor={{ stroke: "var(--hairline-strong)" }} content={<TrendTooltip />} />
-        <Line
+        <Tooltip cursor={{ stroke: "var(--hairline)" }} content={<TrendTooltip />} />
+        <Area
           type="monotone"
           dataKey="total"
           stroke="var(--accent)"
-          strokeWidth={2}
-          dot={{ r: 4, fill: "var(--accent)", stroke: "var(--surface)", strokeWidth: 2 }}
-          activeDot={{ r: 5 }}
+          strokeWidth={2.5}
+          fill="url(#trendGradient)"
+          dot={false}
+          activeDot={{ r: 5, fill: "var(--accent)", stroke: "var(--surface)", strokeWidth: 2 }}
           isAnimationActive={false}
         >
           <LabelList dataKey="total" content={(props) => <EndPointLabel {...props} lastIndex={lastIndex} />} />
-        </Line>
-      </LineChart>
+        </Area>
+      </AreaChart>
     </ResponsiveContainer>
   );
 }
